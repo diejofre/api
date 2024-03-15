@@ -3,9 +3,12 @@ require("dotenv").config(); // environment variable
 // require packages
 const express = require("express");
 const mongoose = require("mongoose");
+var cors = require('cors')
+
 
 // initialise express
 const app = express();
+app.use(cors())
 
 //  mondodb connect
 mongoose
@@ -33,9 +36,16 @@ const materialSchema = new mongoose.Schema({
 // create a model with studentSchema
 const Material = mongoose.model('Material', materialSchema);
 
+const reviewSchema = new mongoose.Schema({
+  author: String,
+  pictureUrl: String,
+  position: String,
+});
+
+const Review = mongoose.model('Review', reviewSchema);
+
 // get documents
 app.get('/api/materials', (req, res) => {
-    // find with mongoose without callback
     Material.find()
     .then((result) => {
         res.send(result);
@@ -43,6 +53,16 @@ app.get('/api/materials', (req, res) => {
     .catch((err) => {
         console.log(err);
     });
+});
+
+app.get('/api/reviews', (req, res) => {
+  Review.find()
+  .then((result) => {
+      res.send(result);
+  })
+  .catch((err) => {
+      console.log(err);
+  });
 });
 
 // Server listen
